@@ -1,0 +1,35 @@
+#include <OneWire.h>                    //Two Libraries included for Temperature Sensor
+#include <DallasTemperature.h>
+#include <Servo.h>                      //Library for the Servo Motor
+
+
+Servo myservo;  // create servo variable for the motor
+
+
+#define ONE_WIRE_BUS 2                //Assigning the pin 
+OneWire oneWire(ONE_WIRE_BUS);        //Set up the pin for the library
+ 
+
+DallasTemperature sensors(&oneWire);   // Pass our oneWire reference to Dallas Temperature.
+ 
+void setup(void)
+{
+  // start serial port
+  Serial.begin(9600);
+  pinMode(5, OUTPUT);
+  
+  sensors.begin();                     // Start up the library
+  myservo.attach(9);                  //attach motor to pin nine
+}
+ 
+ 
+void loop(void){
+  sensors.requestTemperatures();       // Library function to set up for temp reading
+  Serial.print("Temperature: ");       
+  float cel = sensors.getTempCByIndex(0);   // Library function that returns the temp in celsius
+  myservo.write(cel*2);              // tell servo to go to position at the certain temp (*2 so I can space it out)
+  delay(15);       
+  Serial.print(cel);                 //PRINT CELSIUS
+  Serial.println(" Degrees Celsius");     
+
+}
